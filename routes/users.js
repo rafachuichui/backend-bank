@@ -70,4 +70,27 @@ user.post('/login', (req, res) => {
 
 
 
+// //PROFIL
+// user.get('/profile', (req, res) => {
+//     const decoded = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY)
+
+//     user.findeOne({
+//         where: { userid: decoded.userid }
+//     })
+//         .then(user => {
+//             if (user) {
+//                 res.json(user)
+//             } else {
+//                 res.send('User does not exit')
+//             }
+//         })
+//         .cathc(err => {
+//             res.send('error: ' + err)
+//         })
+// })
+
+
+module.exports = users
+
+
 
