@@ -1,52 +1,52 @@
-const mysql = require('mysql2');
-const mysqlPool = require('../model/database');
+// const mysql = require('mysql2');
+// const mysqlPool = require('../model/database');
 
 
-async function connect() {
-    const options = {
-        connectionLimit: 10,
-        host: '127.0.0.1',
-        user: "hackabos",
-        password: "password",
-        database: "bank_of_banks",
-        port: 3306,
-        timezone: 'Z',
-        // debug: true,
-        multipleStatements: true,
-    };
+// async function connect() {
+//     const options = {
+//         connectionLimit: 10,
+//         host: '127.0.0.1',
+//         user: "hackabos",
+//         password: "password",
+//         database: "bank_of_banks",
+//         port: 3306,
+//         timezone: 'Z',
+//         // debug: true,
+//         multipleStatements: true,
+//     };
 
-    /**
-     * Create connection pool and
-     * promisify it to use async / await
-     */
-    const pool = mysql.createPool(options);
-    this.pool = pool.promise();
+//     /**
+//      * Create connection pool and
+//      * promisify it to use async / await
+//      */
+//     const pool = mysql.createPool(options);
+//     this.pool = pool.promise();
 
-    try {
-        const connection = await this.pool.getConnection();
-        if (connection) {
-            connection.release();
-        }
-    } catch (e) {
-        console.error('DATABASE IS CONNECTED', e);
-        throw e;
-    }
-}
+//     try {
+//         const connection = await this.pool.getConnection();
+//         if (connection) {
+//             connection.release();
+//         }
+//     } catch (e) {
+//         console.error('DATABASE IS CONNECTED', e);
+//         throw e;
+//     }
+// }
 
-async function getConnection() {
-    if (this.pool === null) {
-        throw new Error("MySQL connection didn't established. You must connect first.");
-    }
+// async function getConnection() {
+//     if (this.pool === null) {
+//         throw new Error("MySQL connection didn't established. You must connect first.");
+//     }
 
-    const connection = await this.pool.getConnection();
+//     const connection = await this.pool.getConnection();
 
-    return connection;
-}
+//     return connection;
+// }
 
-module.exports = {
-    connect,
-    getConnection,
-};
+// module.exports = {
+//     connect,
+//     getConnection,
+// };
 
 
 
@@ -78,3 +78,23 @@ pool.query = promisify(pool.query);
 
 module.exports = pool;
  */
+
+const Sequelize = require("sequelize");
+const db = {};
+const sequelize = new Sequelize("nodejs_login1", "root1", "", {
+    host: "localhost",
+    dialect: "mysql",
+    operatorsAliases: false,
+
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 1000
+    }
+})
+
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+module.exports = db;

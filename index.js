@@ -1,8 +1,10 @@
 'use strict';
 
 //require('dotenv').config();
-const bodyParser = require('body-parser');
 const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
 const morgan = require('morgan');
 const path = require('path');
 const flash = require('connect-flash');//Para poder ver mensajes
@@ -29,6 +31,7 @@ app.use(session({
 app.set(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cors());
 app.use(bodyParser.json());
 app.use((err, req, res, next) => {
     console.error(err);
@@ -51,6 +54,20 @@ app.use(require('./routes/authentication'));
 app.use('/banks', require('./routes/banks'));
 //app.use('/api', router.accountRouter);
 //app.use('/api', router.managementRoutes);
+
+
+
+
+
+
+
+
+
+const users = require("./routes/users");
+//app.use("/users", users);
+//app.use('/users', require('./routes/users'));
+
+
 
 //Public
 app.use(express.static(path.join(__dirname, 'public')));
