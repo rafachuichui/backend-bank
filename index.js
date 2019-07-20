@@ -11,7 +11,7 @@ const flash = require('connect-flash');//Para poder ver mensajes
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session');
 //const router = require('./webserver/core/routes');
-const mysqlPool = require('./model/database');
+const mysqlPool = require('../database/db');
 
 //Initializations
 const app = express();
