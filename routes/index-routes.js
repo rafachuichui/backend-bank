@@ -1,4 +1,3 @@
-//todas las rutas principales de la aplicacion
 const express = require('express')
 const router = express.Router();
 

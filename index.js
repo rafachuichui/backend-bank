@@ -5,8 +5,11 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
+const flash = require('connect-flash');//Para poder ver mensajes
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session');
 //const router = require('./webserver/core/routes');
-const mysqlPool = require('./webserver/model/database');
+const mysqlPool = require('./model/database');
 
 //Initializations
 const app = express();
@@ -17,6 +20,12 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 //middelwares
+app.use(session({
+    secret: 'banksmysqlnodesession',
+    resave: false,
+    store: new MySQLStore(mysqlPool)
+}));
+
 app.set(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -27,9 +36,11 @@ app.use((err, req, res, next) => {
         error: `Body parser: ${err.message}`,
     });
 });
+app.use(flash());
 
 //Global Variables
 app.use((req, res, next) => {
+    app.locals.success = req.flash('success');
     next();
 });
 
@@ -37,7 +48,7 @@ app.use((req, res, next) => {
 //Routes
 app.use(require('./routes/index-routes'));
 app.use(require('./routes/authentication'));
-app.use('/api', require('./routes/links'));
+app.use('/banks', require('./routes/banks'));
 //app.use('/api', router.accountRouter);
 //app.use('/api', router.managementRoutes);
 
@@ -74,18 +85,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 //Init server
-// function init() {
-//     app.listen(process.env.PORT, () => {
-//         console.log(`The backend server is running in ${process.env.PORT}. Have a nice day`);
-//     });
-// }
-
-// init();
-
-// Starting the server
 function init() {
-    app.listen(app.get('port'), () => {
-        console.log('The backend server is running on port', app.get('port'));
+    app.listen(process.env.PORT, () => {
+        console.log(`The backend server is running in ${process.env.PORT}. Have a nice day`);
     });
 }
+
 init();
+
+// Starting the server
+// function init() {
+//     app.listen(app.get('port'), () => {
+//         console.log('The backend server is running on port', app.get('port'));
+//     });
+// }
+// init();
