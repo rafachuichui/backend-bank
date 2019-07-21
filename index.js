@@ -57,12 +57,6 @@ app.use('/banks', require('./routes/banks'));
 
 
 
-
-
-
-
-
-
 const users = require("./routes/users");
 //app.use("/users", users);
 //app.use('/users', require('./routes/users'));
@@ -75,6 +69,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 //transferMoney
 //router.get('/api/transfer', transferMoneyRoutes);
 
+//transferMoney
+router.get('/transfer', transferMoneyController);
 
 
 // app.use((err, req, res, next) => {
@@ -109,11 +105,3 @@ function init() {
 }
 
 init();
-
-// Starting the server
-// function init() {
-//     app.listen(app.get('port'), () => {
-//         console.log('The backend server is running on port', app.get('port'));
-//     });
-// }
-// init();

@@ -1,6 +1,6 @@
-// FIRST CONNECTION
+/////////////////////////////////////////// FIRST CONNECTION
 const mysql = require('mysql2');
-// const mysqlPool = require('../database');
+//const mysqlPool = require('../database');
 
 
 
@@ -53,7 +53,7 @@ module.exports = {
 
 
 
-//SECOND CONNECTION
+//////////////////////////////////////////SECOND CONNECTION
 // const mysql = require('mysql2');
 // const mysqlPool = require('../model/database');
 // const pool = mysql.createPool(database);
@@ -87,7 +87,7 @@ module.exports = {
 
 
 
-// //THIRD CONNECTION
+//////////////////////////////////////////THIRD CONNECTION
 // const Sequelize = require("sequelize");
 // const db = {};
 // const sequelize = new Sequelize("bank_of_banks", "hackabos", "password", {
