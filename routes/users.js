@@ -1,6 +1,7 @@
 const express = require('express');
 const users = express.Router();
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 const user = require("../model/user");
@@ -19,78 +20,75 @@ users.post('/register', (req, res) => {
         created: today
     }
     user.findeOne({
-        where: { email: req.body.email }
-    })
-})
-    .then(user => {
-        if (!user) {
-            const hash = bcrypt.hashSync(userData.password, 10)
-            userData.password = hash
-            user.create(userData)
-                .then(user => {
-                    let token = jwt.sign(user.dataValues, process.env.SECRET_KEY, {
-                        expiresIn: 1440
-                    })
-                    res.json({ token: token })
-                }).cathc(err => {
-                    res.send('error: ' + err)
-                })
-        } else {
-            res.send('user does not exist')
-        }
-    })
-    .cathc(err => {
-        res.send('error: ' + err)
-    })
-
-
-//LOGIN
-user.post('/login', (req, res) => {
-    user.findeOne({
         where: {
             email: req.body.email
         }
     })
+
         .then(user => {
-            if (bcrypt.compareSync(req.body.password, user.password)) {
-                let token = jwt.sign(user.dataValues, process.env.SECRET_KEY, {
-                    expiresIn: 1440
-                })
-                res.json({ token: token })
+            if (!user) {
+                const hash = bcrypt.hashSync(userData.password, 10)
+                userData.password = hash
+                user.create(userData)
+                    .then(user => {
+                        let token = jwt.sign(user.dataValues, process.env.SECRET_KEY, {
+                            expiresIn: 1440
+                        })
+                        res.json({ token: token })
+                    }).cathc(err => {
+                        res.send('error: ' + err)
+                    })
             } else {
-                res.send('user does not exist')
+                res.json({ error: 'User already exists' })
             }
         })
         .cathc(err => {
             res.send('error: ' + err)
+        });
+
+
+    //LOGIN
+    users.post('/login', (req, res) => {
+        user.findeOne({
+            where: {
+                email: req.body.email
+            }
         })
+            .then(user => {
+                if (bcrypt.compareSync(req.body.password, user.password)) {
+                    let token = jwt.sign(user.dataValues, process.env.SECRET_KEY, {
+                        expiresIn: 1440
+                    })
+                    res.json({ token: token })
+                } else {
+                    res.send('user does not exist')
+                }
+            })
+            .cathc(err => {
+                res.send('error: ' + err)
+            })
 
-})
+    });
 
 
+    //PROFILE
+    users.get('/profile', (req, res) => {
+        const decoded = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY)
 
-
-//PROFIL
-user.get('/profile', (req, res) => {
-    const decoded = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY)
-
-    user.findeOne({
-        where: { userid: decoded.userid }
+        User.findeOne({
+            where: { userid: decoded.userid }
+        })
+            .then(user => {
+                if (user) {
+                    res.json(user)
+                } else {
+                    res.send('User does not exist')
+                }
+            })
+            .cathc(err => {
+                res.send('error: ' + err)
+            })
     })
-        .then(user => {
-            if (user) {
-                res.json(user)
-            } else {
-                res.send('User does not exit')
-            }
-        })
-        .cathc(err => {
-            res.send('error: ' + err)
-        })
 })
-
 
 module.exports = users
-
-
-
