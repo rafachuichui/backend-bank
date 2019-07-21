@@ -1,53 +1,54 @@
 // FIRST CONNECTION
-// const mysql = require('mysql2');
-// const mysqlPool = require('../model/database');
+const mysql = require('mysql2');
+// const mysqlPool = require('../database');
 
 
-// async function connect() {
-//     const options = {
-//         connectionLimit: 10,
-//         host: '127.0.0.1',
-//         user: "hackabos",
-//         password: "password",
-//         database: "bank_of_banks",
-//         port: 3306,
-//         timezone: 'Z',
-//         // debug: true,
-//         multipleStatements: true,
-//     };
 
-//     /**
-//      * Create connection pool and
-//      * promisify it to use async / await
-//      */
-//     const pool = mysql.createPool(options);
-//     this.pool = pool.promise();
+async function connect() {
+    const options = {
+        connectionLimit: 10,
+        host: '127.0.0.1',
+        user: "hackabos",
+        password: "password",
+        database: "bank_of_banks",
+        port: 3306,
+        timezone: 'Z',
+        // debug: true,
+        multipleStatements: true,
+    };
 
-//     try {
-//         const connection = await this.pool.getConnection();
-//         if (connection) {
-//             connection.release();
-//         }
-//     } catch (e) {
-//         console.error('DATABASE IS CONNECTED', e);
-//         throw e;
-//     }
-// }
+    /**
+     * Create connection pool and
+     * promisify it to use async / await
+     */
+    const pool = mysql.createPool(options);
+    this.pool = pool.promise();
 
-// async function getConnection() {
-//     if (this.pool === null) {
-//         throw new Error("MySQL connection didn't established. You must connect first.");
-//     }
+    try {
+        const connection = await this.pool.getConnection();
+        if (connection) {
+            connection.release();
+        }
+    } catch (e) {
+        console.error('DATABASE IS CONNECTED', e);
+        throw e;
+    }
+}
 
-//     const connection = await this.pool.getConnection();
+async function getConnection() {
+    if (this.pool === null) {
+        throw new Error("MySQL connection didn't established. You must connect first.");
+    }
 
-//     return connection;
-// }
+    const connection = await this.pool.getConnection();
 
-// module.exports = {
-//     connect,
-//     getConnection,
-// };
+    return connection;
+}
+
+module.exports = {
+    connect,
+    getConnection,
+};
 
 
 

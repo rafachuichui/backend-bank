@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const mysqlPool = require('../../database/db');
+
+const mysqlPool = require('../database/db');
 
 
 router.get('/add', (req, res) => {
@@ -49,8 +50,9 @@ router.post('/edit/:id', async (req, res) => {
     const { id } = req.params;
     const newBank = {
         title,
+        url,
         description,
-        url
+
     };
     await mysqlPool.query('UPDATE all_banks set ? WHERE id =?', [newBank, id]);
     res.redirect('/banks');
