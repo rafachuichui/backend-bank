@@ -1,9 +1,9 @@
-/////////////////////////////////////////// FIRST CONNECTION
+
 const mysql = require('mysql2');
-//const mysqlPool = require('../database');
+const mysqlPool = require('../webserver/database/db');
 
 
-
+/////////////////////////////////////////// FIRST CONNECTION
 async function connect() {
     const options = {
         connectionLimit: 10,
@@ -13,7 +13,7 @@ async function connect() {
         database: "bank_of_banks",
         port: 3306,
         timezone: 'Z',
-        // debug: true,
+        debug: true,
         multipleStatements: true,
     };
 

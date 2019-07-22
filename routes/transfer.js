@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 
-const mysqlPool = require('../database/db');
+const mysqlPool = require('../webserver/database/db');
+
+
 
 /**
 * Problema 1

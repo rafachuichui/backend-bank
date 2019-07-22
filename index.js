@@ -11,7 +11,9 @@ const flash = require('connect-flash');//Para poder ver mensajes
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session');
 //const router = require('./webserver/core/routes');
-const mysqlPool = require('../database/db');
+const mysqlPool = require('../webserver/database/db');
+
+
 
 //Initializations
 const app = express();
@@ -73,35 +75,36 @@ app.use(express.static(path.join(__dirname, 'public')));
 router.get('/transfer', transferMoneyController);
 
 
-// app.use((err, req, res, next) => {
-//     const { name: errorName } = err;
+app.use((err, req, res, next) => {
+    const { name: errorName } = err;
 
-//     if (errorName === 'AccountNotActivatedError') {
-//         return res.status(403).send({
-//             message: err.message,
-//         });
-//     }
+    if (errorName === 'AccountNotActivatedError') {
+        return res.status(403).send({
+            message: err.message,
+        });
+    }
 
-//     return res.status(500).send({
-//         error: err.message,
-//     });
-// });
-
-
-// async function init() {
-//     try {
-//         await mysqlPool.connect();
-//     } catch (e) {
-//         console.error(e);
-//         process.exit(1);
-//     }
-
-
-//Init server
-function init() {
-    app.listen(process.env.PORT, () => {
-        console.log(`The backend server is running in ${process.env.PORT}. Have a nice day`);
+    return res.status(500).send({
+        error: err.message,
     });
+});
+
+
+async function init() {
+    try {
+        await mysqlPool.connect();
+    } catch (e) {
+        console.error(e);
+        process.exit(1);
+    }
+
+
+    //Init server
+    function init() {
+        app.listen(process.env.PORT, () => {
+            console.log(`The backend server is running in ${process.env.PORT}. Have a nice day`);
+        });
+    }
 }
 
 init();
