@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 
-const mysqlPool = require('./webserver/database/db');
+const mysqlPool = require('../database/db');
 
 
 
@@ -82,6 +82,4 @@ async function insertBankController() {
 
 
 }
-module.exports = {
-    router,
-};
+module.exports = router

@@ -1,19 +1,19 @@
+'use strict';
 
 const mysql = require('mysql2');
-const mysqlPool = require('./webserver/database/db');
 
 
 /////////////////////////////////////////// FIRST CONNECTION
 async function connect() {
     const options = {
         connectionLimit: 10,
-        host: '127.0.0.1',
-        user: "hackabos",
-        password: "password",
-        database: "bank_of_banks",
-        port: 3306,
+        host: process.env.MYSQL_HOST,
+        user: process.env.MYSQL_USER,
+        password: process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_DATABASE,
+        port: process.env.MYSQL_PORT,
         timezone: 'Z',
-        debug: true,
+        //debug: true,
         multipleStatements: true,
     };
 
@@ -53,59 +53,6 @@ module.exports = {
 
 
 
-//////////////////////////////////////////SECOND CONNECTION
-// const mysql = require('mysql2');
-// const mysqlPool = require('../model/database');
-// const pool = mysql.createPool(database);
-
-
-// pool.getConnection(err, connection) => {
-//     if (err) {
-//         if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-//             console.error('DATABASE CONNECTION WAS CLOSED');
-//         }
-//         if (err.code === 'ER_CON_COUNT_ERROR') {
-//             console.error('DATABASE CONNECTION WAS CLOSED');
-//         }
-//         if (err.code === 'ECONNREFUSED') {
-//             console.error('DATABASE CONNECTION WAS REFUSED');
-//         }
-//     }
-//     if (connection) connection.release();
-//     console.log('DATABASE IS CONECTED')
-//     return;
-// }
-
-
-// //Promisify Pool Querys
-// pool.query = promisify(pool.query);
-
-//module.exports = pool;
 
 
 
-
-
-
-//////////////////////////////////////////THIRD CONNECTION
-// const Sequelize = require("sequelize");
-// const db = {};
-// const sequelize = new Sequelize("bank_of_banks", "hackabos", "password", {
-//     host: "127.0.0.1",
-//     dialect: "mysql",
-//     operatorsAliases: false,
-
-//     pool: {
-//         max: 5,
-//         min: 0,
-//         acquire: 30000,
-//         idle: 10000
-//     }
-// })
-
-
-
-// db.sequelize = sequelize;
-// db.Sequelize = Sequelize;
-
-// module.exports = db;

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 
-const mysqlPool = require('./webserver//db');
+const mysqlPool = require('../database/db');
 
 
 router.get('/add', (req, res) => {

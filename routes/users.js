@@ -91,4 +91,4 @@ users.post('/register', (req, res) => {
     })
 })
 
-module.exports = router
+module.exports = users

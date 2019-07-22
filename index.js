@@ -1,6 +1,6 @@
 'use strict';
 
-//require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -10,8 +10,8 @@ const path = require('path');
 const flash = require('connect-flash');//Para poder ver mensajes
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session');
-//const router = require('./webserver/core/routes');
-const mysqlPool = require('./webserver/database/db');
+//const router = require('./routes');
+const mysqlPool = require('./database/db');
 
 
 
@@ -24,23 +24,18 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 //middelwares
-app.use(session({
-    secret: 'banksmysqlnodesession',
-    resave: false,
-    store: new MySQLStore(mysqlPool)
-}));
+// app.use(session({
+//     secret: 'banksmysqlnodesession',
+//     resave: false,
+//     store: new MySQLStore(mysqlPool)
+// }));
 
 app.set(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
-app.use((err, req, res, next) => {
-    console.error(err);
-    res.status(400).send({
-        error: `Body parser: ${err.message}`,
-    });
-});
+
 app.use(flash());
 
 //Global Variables
@@ -72,9 +67,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 //router.get('/api/transfer', transferMoneyRoutes);
 
 //transferMoney
-router.get('/transfer', transferMoneyController);
+//router.get('/transfer', transferMoneyController);
 
-
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(400).send({
+        error: `Body parser: ${err.message}`,
+    });
+});
 app.use((err, req, res, next) => {
     const { name: errorName } = err;
 
@@ -100,11 +100,11 @@ async function init() {
 
 
     //Init server
-    function init() {
-        app.listen(process.env.PORT, () => {
-            console.log(`The backend server is running in ${process.env.PORT}. Have a nice day`);
-        });
-    }
+
+    app.listen(process.env.PORT, () => {
+        console.log(`The backend server is running in ${process.env.PORT}. Have a nice day`);
+    });
+
 }
 
 init();
