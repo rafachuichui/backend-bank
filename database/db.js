@@ -1,6 +1,6 @@
 
 const mysql = require('mysql2');
-const mysqlPool = require('../webserver/database/db');
+const mysqlPool = require('./webserver/database/db');
 
 
 /////////////////////////////////////////// FIRST CONNECTION
