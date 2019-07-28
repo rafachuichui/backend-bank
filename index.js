@@ -5,69 +5,29 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const morgan = require('morgan');
-const path = require('path');
-const flash = require('connect-flash');//Para poder ver mensajes
-const session = require('express-session');
-const MySQLStore = require('express-mysql-session');
-//const router = require('./routes');
 const mysqlPool = require('./database/db');
-
-
+const userRouter = require('./routes/users');
+const bankRouter = require('./routes/banks');
 
 //Initializations
 const app = express();
 
 //Settings
-app.set('port', process.env.PORT || 3000);
-app.set('views', path.join(__dirname, 'views'));
-
-
-//middelwares
-// app.use(session({
-//     secret: 'banksmysqlnodesession',
-//     resave: false,
-//     store: new MySQLStore(mysqlPool)
-// }));
-
-app.set(morgan('dev'));
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use(flash());
 
-//Global Variables
-app.use((req, res, next) => {
-    app.locals.success = req.flash('success');
-    next();
+process.on('uncaughtException', (error) => {
+    console.error(`uncaughtException: ${error}`);
+});
+process.on('unhandledRejection', (error) => {
+    console.error(`unhandledRejection: ${error}`);
 });
 
 
 //Routes
-app.use(require('./routes/index-routes'));
-app.use(require('./routes/authentication'));
-app.use('/banks', require('./routes/banks'));
-//app.use('/api', router.accountRouter);
-//app.use('/api', router.managementRoutes);
-
-
-
-const users = require("./routes/users");
-//app.use("/users", users);
-//app.use('/users', require('./routes/users'));
-
-
-
-//Public
-app.use(express.static(path.join(__dirname, 'public')));
-
-//transferMoney
-//router.get('/api/transfer', transferMoneyRoutes);
-
-//transferMoney
-//router.get('/transfer', transferMoneyController);
+app.use(bankRouter);
+app.use(userRouter);
 
 app.use((err, req, res, next) => {
     console.error(err);
@@ -89,22 +49,21 @@ app.use((err, req, res, next) => {
     });
 });
 
-
 async function init() {
     try {
         await mysqlPool.connect();
+
+        //Init server
+        app.listen(process.env.PORT, () => {
+            console.log(`The backend server is running in ${process.env.PORT}. Have a nice day`);
+        });
     } catch (e) {
         console.error(e);
         process.exit(1);
     }
-
-
-    //Init server
-
-    app.listen(process.env.PORT, () => {
-        console.log(`The backend server is running in ${process.env.PORT}. Have a nice day`);
-    });
-
 }
 
 init();
+
+
+//Hecho deploy,pero por una extraña razon no funciona,seguimos intentando que funcione
